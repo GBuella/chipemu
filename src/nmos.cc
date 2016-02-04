@@ -43,7 +43,8 @@ nmos<node_id>::create_nodes(const chip_description<node_id>& desc)
 template<typename node_id>
 nmos<node_id>::transistor::transistor(const transdef<node_id> *ctor_def):
     on(false),
-    def(*ctor_def)
+    c1(ctor_def->c1),
+    c2(ctor_def->c2)
 { }
 
 template<typename node_id>
@@ -143,11 +144,11 @@ inline void
 nmos<node_id>::group_add_siblings(const struct transistor& transistor, node_id id)
 {
     if (transistor.on) {
-        if (transistor.def.c1 == id) {
-            group_add(transistor.def.c2);
+        if (transistor.c1 == id) {
+            group_add(transistor.c2);
         }
         else {
-            group_add(transistor.def.c1);
+            group_add(transistor.c1);
         }
     }
 }
@@ -261,8 +262,8 @@ nmos<node_id>::setup_dependants(const chip_description<node_id>& desc)
         struct node& node = nodes[id];
 
         for (node_id gate : node.gates) {
-            node_id c1 = transistors[gate].def.c1;
-            node_id c2 = transistors[gate].def.c2;
+            node_id c1 = transistors[gate].c1;
+            node_id c2 = transistors[gate].c2;
 
             if (desc.node_power != c1 and desc.node_ground != c1) {
                 node.dependants.insert(c1);

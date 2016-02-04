@@ -71,7 +71,8 @@ protected:
     struct transistor
     {
         bool on;
-        const transdef<node_id> def;
+        node_id c1;
+        node_id c2;
 
         transistor(const transdef<node_id>* ctor_def);
     };
