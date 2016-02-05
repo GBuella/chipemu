@@ -1,6 +1,4 @@
 
-/* vim: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-
 #ifndef MOS65XX_H
 #define MOS65XX_H
 

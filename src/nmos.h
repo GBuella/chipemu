@@ -1,6 +1,4 @@
 
-/* vim: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
-
 #ifndef CHIPEMU_CHIP_BASE_H
 #define CHIPEMU_CHIP_BASE_H
 
