@@ -64,18 +64,18 @@ if(NOT MSVC)
 # Even after setting CXX_STANDARD to 14, cmake still doesn't
 # compile the feature tests with the c++14 flag
 #
-  CHECK_CXX_COMPILER_FLAG("-std=c++14" KATOR_COMPILER_SUPPORTS_CXX14)
-  CHECK_CXX_COMPILER_FLAG("-std=c++1y" KATOR_COMPILER_SUPPORTS_CXX1Y)
-  if(KATOR_COMPILER_SUPPORTS_CXX14)
-    set(KATOR_STANDARD_FLAG "-std=c++14")
-  elseif(KATOR_COMPILER_SUPPORTS_CXX1Y)
-    set(KATOR_STANDARD_FLAG "-std=c++1y")
+  CHECK_CXX_COMPILER_FLAG("-std=c++14" CHIPEMU_COMPILER_SUPPORTS_CXX14)
+  CHECK_CXX_COMPILER_FLAG("-std=c++1y" CHIPEMU_COMPILER_SUPPORTS_CXX1Y)
+  if(CHIPEMU_COMPILER_SUPPORTS_CXX14)
+    set(CHIPEMU_STANDARD_FLAG "-std=c++14")
+  elseif(CHIPEMU_COMPILER_SUPPORTS_CXX1Y)
+    set(CHIPEMU_STANDARD_FLAG "-std=c++1y")
   endif()
 
-  target_compile_options(chipemu PRIVATE "${KATOR_STANDARD_FLAG}")
+  target_compile_options(chipemu PRIVATE "${CHIPEMU_STANDARD_FLAG}")
   set_source_files_properties(test/cbmbasic/perfect6502.cc
                               PROPERTIES COMPILE_FLAGS 
-                              "${KATOR_STANDARD_FLAG}")
+                              "${CHIPEMU_STANDARD_FLAG}")
 
 
 endif()
