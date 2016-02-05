@@ -408,8 +408,7 @@ nmos<node_id>::~nmos<node_id>()
 {
 }
 
-template class nmos<uint_fast16_t>;
-template class nmos<uint_fast32_t>;
+template class nmos<uint16_t>;
 
 }
 }

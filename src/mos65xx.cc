@@ -28,7 +28,7 @@ namespace chipemu
 namespace implementation
 {
 
-typedef uint_fast16_t node_id;
+typedef uint16_t node_id;
 
 #include "mos6502.inc"
 
