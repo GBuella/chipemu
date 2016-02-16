@@ -1,6 +1,6 @@
 
-#ifndef BASIC_MACHINE_6502_H
-#define BASIC_MACHINE_6502_H
+#ifndef TESTBENCH_MACHINE_6502_H
+#define TESTBENCH_MACHINE_6502_H
 
 #include "machine_implementation.h"
 #include "memory.h"
