@@ -15,7 +15,9 @@ static std::unique_ptr<testbench::machine> machine;
 static void process_arguments(char**);
 static const char *program_name;
 static void usage_exit(int exit_code);
+static void print_run_result(testbench::run_result);
 FILE *trace_file = nullptr;
+bool print_stats_on_exit = false;
 
 /* Code for registering machine constructors in other translation units,
  * without recompiling this one.
@@ -24,6 +26,8 @@ FILE *trace_file = nullptr;
 
 int main(int argc, char **argv)
 {
+    testbench::run_result result;
+
     if (testbench::machine::available.count() == 0) {   // forgot to link implementations?
         fputs("Fatal error no machines implemented\n", stderr);
         return 1;
@@ -33,7 +37,15 @@ int main(int argc, char **argv)
     if (trace_file != nullptr) {
         machine->enable_trace(trace_file);
     }
-    machine->run(stdin, stdout);
+    result = machine->run(stdin, stdout);
+    if (print_stats_on_exit) {
+        print_run_result(result);
+    }
+}
+
+static void print_run_result(testbench::run_result result)
+{
+    printf("\nCycles: %llu\n", result.cycle_count);
 }
 
 static void usage_exit(int exit_code)
@@ -47,6 +59,7 @@ static void usage_exit(int exit_code)
      "%s [-h] [-t path] <machine type>\n"
      "  -h\n"
      "  --help          print this very helpful text, and exit\n"
+     "  -s              print some statistics on exit\n"
      "  -t path\n"
      "  --trace path    print trace to file at `path`\n"
      "  <machine type>  basic interpreter to emulate, available choices are:\n",
@@ -100,8 +113,11 @@ static void process_arguments(char **arg)
         if (argument == "-h" or argument == "--help") {
             usage_exit(EXIT_SUCCESS);
         }
-        if (argument == "-t" or argument == "--trace") {
+        else if (argument == "-t" or argument == "--trace") {
             setup_trace_path(*arg++);
+        }
+        else if (argument == "-s") {
+            print_stats_on_exit = true;
         }
         else {
             pick_machine(argument);

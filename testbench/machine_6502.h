@@ -33,7 +33,7 @@ public:
 
     virtual ~machine_6502();
 
-    virtual void run(FILE *input, FILE *output) override final;
+    virtual run_result run(FILE *input, FILE *output) override final;
 
 private:
 

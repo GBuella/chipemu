@@ -7,11 +7,16 @@
 namespace testbench
 {
 
+struct run_result
+{
+    unsigned long long cycle_count;
+};
+
 class machine
 {
 public:
 
-    virtual void run(FILE *input, FILE *output) = 0;
+    virtual run_result run(FILE *input, FILE *output) = 0;
 
     virtual void enable_trace(FILE*) = 0;
     virtual void disable_trace() = 0;

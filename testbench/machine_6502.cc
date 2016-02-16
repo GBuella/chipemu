@@ -71,20 +71,21 @@ inline void machine_6502::initialize_CPU()
     print_trace("Initializing MOS6502 - done\n");
 }
 
-void machine_6502::run(FILE *input, FILE *output)
+run_result machine_6502::run(FILE *input, FILE *output)
 {
     std::lock_guard<std::mutex> lock(mutex);
-    unsigned long long cycle_count = 0;
+    run_result result = {0};
 
     initialize_CPU();
     while (not feof(input)) {
-        ++cycle_count;
         cycle(CPU_6502.get());
+        ++result.cycle_count;
         handle_memory(CPU_6502.get(), &memory);
-        print_trace("Cycle %llu\n", cycle_count);
+        print_trace("Cycle %llu\n", result.cycle_count);
         trace_CPU();
-        on_CPU_cycle(input, output, cycle_count);
+        on_CPU_cycle(input, output, result.cycle_count);
     }
+    return result;
 }
 
 machine_6502::~machine_6502()
