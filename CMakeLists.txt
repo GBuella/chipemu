@@ -31,7 +31,7 @@ include(CheckCXXSourceRuns)
 include(CheckIncludeFiles)
 
 SET(CHIPEMU_SOURCES
-    src/chips.cc
+    src/chipemu.cc
     src/nmos.cc
     src/mos65xx.cc)
 

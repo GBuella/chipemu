@@ -21,8 +21,6 @@ public:
 
 };
 
-chip* create(const char* name);
-
 }
 
 #endif
