@@ -5,15 +5,18 @@
 
 using chipemu::MOS6502;
 
-testbench::machine_6502::machine_6502():
+namespace testbench
+{
+
+machine_6502::machine_6502():
     CPU_6502(MOS6502::create())
 {}
 
 static void initialize(MOS6502*);
 static void cycle(MOS6502*);
-static void handle_memory(MOS6502*, testbench::memory*);
+static void handle_memory(MOS6502*, memory*);
 
-inline void testbench::machine_6502::trace_CPU()
+inline void machine_6502::trace_CPU()
 {
     if (not is_trace_enabled()) return;
 
@@ -37,7 +40,7 @@ inline void testbench::machine_6502::trace_CPU()
     }
 }
 
-inline void testbench::machine_6502::initialize_CPU()
+inline void machine_6502::initialize_CPU()
 {
     print_trace("Initializing MOS6502\n");
     CPU_6502->pin_write(MOS6502::RES, false);              //  setup pins for
@@ -68,7 +71,7 @@ inline void testbench::machine_6502::initialize_CPU()
     print_trace("Initializing MOS6502 - done\n");
 }
 
-void testbench::machine_6502::run(FILE *input, FILE *output)
+void machine_6502::run(FILE *input, FILE *output)
 {
     std::lock_guard<std::mutex> lock(mutex);
     unsigned long long cycle_count = 0;
@@ -84,11 +87,11 @@ void testbench::machine_6502::run(FILE *input, FILE *output)
     }
 }
 
-testbench::machine_6502::~machine_6502()
+machine_6502::~machine_6502()
 {
 }
 
-static void handle_memory(MOS6502 *CPU, testbench::memory *memory)
+static void handle_memory(MOS6502 *CPU, class memory *memory)
 {
     unsigned address = CPU->read_address_bus();
 
@@ -108,3 +111,4 @@ static void cycle(MOS6502 *CPU)
     CPU->recalc();
 }
 
+}
