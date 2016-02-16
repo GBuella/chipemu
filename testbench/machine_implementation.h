@@ -13,7 +13,7 @@ class machine_implementation : public machine
 {
 public:
 
-    ~machine_implementation();
+    virtual ~machine_implementation();
 
     void enable_trace(FILE*) final;
     void disable_trace() final;

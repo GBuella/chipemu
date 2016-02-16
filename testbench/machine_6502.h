@@ -31,7 +31,7 @@ public:
         return CPU_6502.get();
     }
 
-    ~machine_6502();
+    virtual ~machine_6502();
 
     virtual void run(FILE *input, FILE *output) override final;
 

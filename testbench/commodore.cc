@@ -146,4 +146,8 @@ void commodore::on_CPU_cycle(FILE *input, FILE *output,
     }
 }
 
+commodore::~commodore()
+{
+}
+
 }

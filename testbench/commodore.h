@@ -17,6 +17,7 @@ class commodore : public machine_6502
 {
 protected:
     commodore();
+    virtual ~commodore();
 
     virtual void on_CPU_cycle(FILE *input, FILE *output,
                               unsigned long long cycle) override final;
