@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(chipemu CXX C)
+project(chipemu CXX)
 set(CHIPEMU_VERSION_MAJOR 0)
 set(CHIPEMU_VERSION_MINOR 1)
 
@@ -37,19 +37,6 @@ SET(CHIPEMU_SOURCES
 
 ADD_LIBRARY(chipemu SHARED ${CHIPEMU_SOURCES})
 
-SET(CBMBASIC_SOURCES
-    test/cbmbasic/cbmbasic.c
-    test/cbmbasic/perfect6502.cc
-    test/cbmbasic/runtime.c
-    test/cbmbasic/runtime_init.c
-    test/cbmbasic/plugin.c
-    test/cbmbasic/console.c
-    test/cbmbasic/emu.c)
-
-ADD_EXECUTABLE(cbmbasic ${CBMBASIC_SOURCES})
-target_link_libraries(cbmbasic chipemu)
-file(COPY test/cbmbasic/cbmbasic.bin DESTINATION .)
-
 ADD_EXECUTABLE(testbench
                testbench/main.cc
                testbench/machine_6502.cc
@@ -86,9 +73,6 @@ if(NOT MSVC)
   target_compile_options(chipemu PRIVATE "${CHIPEMU_STANDARD_FLAG}")
   target_compile_options(testbench PRIVATE "${CHIPEMU_STANDARD_FLAG}")
   target_compile_options(testbench PRIVATE "${CHIPEMU_STANDARD_FLAG}")
-  set_source_files_properties(test/cbmbasic/perfect6502.cc
-                              PROPERTIES COMPILE_FLAGS 
-                              "${CHIPEMU_STANDARD_FLAG}")
 
 
 endif()
@@ -104,7 +88,6 @@ if(MSVC)
 
 # /Za  brings MSVC closer to ISO
   target_compile_options(chipemu PUBLIC "$<$<CONFIG:Release>:/Za /MD>")
-  target_compile_options(cbmbasic PUBLIC "$<$<CONFIG:Release>:/Za /MD>")
 
 endif()
 
