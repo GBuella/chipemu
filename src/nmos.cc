@@ -39,11 +39,35 @@ nmos<node_id>::create_nodes(const chip_description<node_id>& desc)
 }
 
 template<typename node_id>
-nmos<node_id>::transistor::transistor(const transdef<node_id> *ctor_def):
-    on(false),
-    c1(ctor_def->c1),
-    c2(ctor_def->c2)
+inline nmos<node_id>::transistor::transistor(const transdef<node_id> *ctor_def):
+    data1(ctor_def->c1 << 1),
+    data2(ctor_def->c2)
 { }
+
+template<typename node_id>
+inline node_id nmos<node_id>::transistor::c1() const
+{
+    return data1 >> 1;
+}
+
+template<typename node_id>
+inline node_id nmos<node_id>::transistor::c2() const
+{
+    return data2;
+}
+
+template<typename node_id>
+inline bool nmos<node_id>::transistor::is_on() const
+{
+    return data1 & 1;
+}
+
+template<typename node_id>
+inline void nmos<node_id>::transistor::set_on(bool value)
+{
+    data1 = (c1() << 1) | (value ? 1 : 0);
+}
+
 
 template<typename node_id>
 nmos<node_id>::node::node(bool is_pullup):
@@ -141,12 +165,12 @@ template<typename node_id>
 inline void
 nmos<node_id>::group_add_siblings(const struct transistor& transistor, node_id id)
 {
-    if (transistor.on) {
-        if (transistor.c1 == id) {
-            group_add(transistor.c2);
+    if (transistor.is_on()) {
+        if (transistor.c1() == id) {
+            group_add(transistor.c2());
         }
         else {
-            group_add(transistor.c1);
+            group_add(transistor.c1());
         }
     }
 }
@@ -260,8 +284,8 @@ nmos<node_id>::setup_dependants(const chip_description<node_id>& desc)
         struct node& node = nodes[id];
 
         for (node_id gate : node.gates) {
-            node_id c1 = transistors[gate].c1;
-            node_id c2 = transistors[gate].c2;
+            node_id c1 = transistors[gate].c1();
+            node_id c2 = transistors[gate].c2();
 
             if (desc.node_power != c1 and desc.node_ground != c1) {
                 node.dependants.insert(c1);
@@ -368,7 +392,7 @@ nmos<node_id>::recalc_node(node_id id)
         if (node.value != value) {
             node.value = value;
             for (node_id gate : node.gates) {
-                transistors[gate].on = value;
+                transistors[gate].set_on(value);
             }
             changed_push(value ? node.left_dependants : node.dependants);
         }

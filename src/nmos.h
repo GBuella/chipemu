@@ -66,11 +66,18 @@ private:
 
 protected:
 
-    struct transistor
+    class transistor
     {
-        bool on;
-        node_id c1;
-        node_id c2;
+    private:
+        node_id data1;
+        node_id data2;
+
+    public:
+
+        bool is_on() const;
+        void set_on(bool);
+        node_id c1() const;
+        node_id c2() const;
 
         transistor(const transdef<node_id>* ctor_def);
     };
