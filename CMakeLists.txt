@@ -50,6 +50,17 @@ ADD_EXECUTABLE(cbmbasic ${CBMBASIC_SOURCES})
 target_link_libraries(cbmbasic chipemu)
 file(COPY test/cbmbasic/cbmbasic.bin DESTINATION .)
 
+ADD_EXECUTABLE(testbench
+               testbench/main.cc
+               testbench/machine_6502.cc
+               testbench/memory.cc
+               testbench/machine_implementation.cc
+               testbench/commodore.cc
+               testbench/c64.cc
+               testbench/cvic20.cc)
+
+target_link_libraries(testbench chipemu)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CHIPEMU_STANDARD_FLAG "")
 
@@ -73,6 +84,8 @@ if(NOT MSVC)
   endif()
 
   target_compile_options(chipemu PRIVATE "${CHIPEMU_STANDARD_FLAG}")
+  target_compile_options(testbench PRIVATE "${CHIPEMU_STANDARD_FLAG}")
+  target_compile_options(testbench PRIVATE "${CHIPEMU_STANDARD_FLAG}")
   set_source_files_properties(test/cbmbasic/perfect6502.cc
                               PROPERTIES COMPILE_FLAGS 
                               "${CHIPEMU_STANDARD_FLAG}")
@@ -125,15 +138,19 @@ int main() {
 
 if(CHIPEMU_COMPILER_SUPPORTS_WERROR)
   target_compile_options(chipemu PRIVATE -Werror)
+  target_compile_options(testbench PRIVATE -Werror)
 endif()
 if(CHIPEMU_COMPILER_SUPPORTS_WALL)
   target_compile_options(chipemu PRIVATE -Wall)
+  target_compile_options(testbench PRIVATE -Wall)
 endif()
 if(CHIPEMU_COMPILER_SUPPORTS_WEXTRA)
   target_compile_options(chipemu PRIVATE -Wextra)
+  target_compile_options(testbench PRIVATE -Wextra)
 endif()
 if(CHIPEMU_COMPILER_SUPPORTS_PEDANTIC)
   target_compile_options(chipemu PRIVATE -pedantic)
+  target_compile_options(testbench PRIVATE -pedantic)
 endif()
 
 # clang specific -Weverything flag, can result in a lot of warnings

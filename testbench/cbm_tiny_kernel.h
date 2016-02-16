@@ -1,0 +1,20 @@
+#ifndef CBM_TINY_KERNEL_H
+#define CBM_TINY_KERNEL_H
+
+#define SELECT_CHRIN 1
+#define SELECT_CHROUT 2
+#define SELECT_NOT_IMPL 3
+
+#define REGISTERS_START 64768
+#define REGISTERS_SIZE 256
+
+#define OFF_SELECT 0
+#define OFF_IO 1
+#define OFF_ACK 2
+#define OFF_BASIC_ENTRY 3
+#define OFF_SCREEN_WIDTH 5
+#define OFF_SCREEN_HEIGHT 6
+#define OFF_RAM_TOP 7
+#define OFF_RAM_BOTTOM 9
+
+#endif
