@@ -4,54 +4,52 @@
 
 #include "chipemu.h"
 
+#include <cstdint>
+#include <cstddef>
 #include <vector>
-#include <set>
 
 namespace chipemu
 {
 namespace implementation
 {
 
-template<typename node_id>
 struct transdef
 {
-    const node_id gate;
-    const node_id c1;
-    const node_id c2;
+    const uint16_t gate;
+    const uint16_t c1;
+    const uint16_t c2;
 
     bool operator==(const transdef&) const;
 
-    transdef(node_id a, node_id b, node_id c):
+    transdef(uint16_t a, uint16_t b, uint16_t c):
         gate(a),
         c1(b),
         c2(c)
     { }
 };
 
-template<typename node_id>
 struct chip_description
 {
     const unsigned node_count;
     const bool *pullups;
     const unsigned transistor_count;
-    const transdef<node_id> *transistors;
-    const node_id node_power;
-    const node_id node_ground;
+    const transdef *transistors;
+    const uint16_t node_power;
+    const uint16_t node_ground;
 };
 
-template<typename node_id>
 class nmos : public virtual chipemu::chip
 {
 private:
 
-    void recalc_node(node_id);
+    void recalc_node(uint16_t);
     void recalc_nodes();
 
-    std::vector<node_id> changed_queue;
-    typename std::vector<node_id>::iterator changed_eating, changed_feeding;
+    std::vector<uint16_t> changed_queue;
+    typename std::vector<uint16_t>::iterator changed_eating, changed_feeding;
 
-    std::vector<node_id> current_group;
-    typename std::vector<node_id>::iterator group_tail;
+    std::vector<uint16_t> current_group;
+    typename std::vector<uint16_t>::iterator group_tail;
 
     enum class group_contains {
         nothing,
@@ -64,74 +62,43 @@ private:
 
     group_contains group_current_value;
 
-protected:
-
-    class transistor
-    {
-    private:
-        node_id data1;
-        node_id data2;
-
-    public:
-
-        bool is_on() const;
-        void set_on(bool);
-        node_id c1() const;
-        node_id c2() const;
-
-        transistor(const transdef<node_id>* ctor_def);
-    };
-
-    struct node
-    {
-        bool pullup;
-        bool pulldown;
-        bool value;
-        bool is_member_of_current_group;
-        std::vector<node_id> gates;
-        std::vector<node_id> c1c2s;
-        std::set<node_id> dependants;
-        std::set<node_id> left_dependants;
-
-        node(bool is_pullup);
-
-    };
-
-private:
-
     void changed_queue_init();
     void group_init();
-    void group_update_value(node_id);
-    void group_add_siblings(const struct transistor&, node_id);
-    void group_add(node_id);
+    void group_update_value(uint16_t);
+    void group_add(uint16_t);
 
-    void create_nodes(const chip_description<node_id>&);
-    void setup_transistors(const chip_description<node_id>&);
-    void setup_dependants(const chip_description<node_id>&);
-
-    node_id changed_pop();
-    void changed_push(node_id id);
-    void changed_push(const std::set<node_id> &ids);
+    uint16_t changed_pop();
+    void changed_push(uint16_t id);
     bool changed_is_empty() const;
     void changed_clear();
 
-    void group_setup(node_id);
+    void group_setup(uint16_t);
     bool group_get_value() const;
     bool is_group_empty() const;
-    node_id group_pop();
+    uint16_t group_pop();
 
-    std::vector<node> nodes;
-    std::vector<transistor> transistors;
+    uint16_t *node_addr(uint16_t id);
+    const uint16_t *node_addr(uint16_t id) const;
+
+    std::vector<uint16_t> nodes;
+    std::vector<uint16_t> node_offsets;
+    std::vector<uint16_t> change_order;
+
+    void add_ordered_change(uint16_t);
+    size_t change_count;
+    void commit_ordered_changes();
+    uint16_t desc_nodes_count;
+    uint16_t desc_transistor_count;
 
 protected:
 
-    const node_id power;
-    const node_id ground;
+    const uint16_t power;
+    const uint16_t ground;
 
-    nmos(const chip_description<node_id>& desc);
+    nmos(const chip_description& desc);
 
-    unsigned read_nodes(const node_id*, unsigned count) const noexcept;
-    void write_nodes(const node_id*, unsigned count, unsigned value) noexcept;
+    unsigned read_nodes(const uint16_t*, unsigned count) const noexcept;
+    void write_nodes(const uint16_t*, unsigned count, unsigned value) noexcept;
 
 public:
 
@@ -142,7 +109,6 @@ public:
     virtual void stabilize_network() noexcept override;
     virtual void recalc() noexcept override;
 
-    virtual ~nmos();
 };
 
 }

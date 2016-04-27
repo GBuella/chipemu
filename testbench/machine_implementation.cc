@@ -2,6 +2,7 @@
 #include "machine_implementation.h"
 
 #include <vector>
+#include <cstring>
 #include <memory>
 
 namespace testbench

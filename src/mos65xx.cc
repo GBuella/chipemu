@@ -29,7 +29,7 @@ typedef uint16_t node_id;
 
 #include "mos6502.inc"
 
-static chip_description<node_id> description_65XX =
+static chip_description description_65XX =
 {
     sizeof(pullups) / sizeof(pullups[0]),
     pullups,
@@ -52,7 +52,7 @@ static constexpr node_id data_bus_ids[8] =
     {NODE::DB7, NODE::DB6, NODE::DB5, NODE::DB4,
      NODE::DB3, NODE::DB2, NODE::DB1, NODE::DB0};
 
-class implementation_6500 : protected nmos<node_id>,
+class implementation_6500 : protected nmos,
                             protected virtual MOS6500
 {
 protected:

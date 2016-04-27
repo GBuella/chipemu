@@ -96,7 +96,7 @@ static const bool pullups[] = {
 	0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1
 };
 
-static const transdef<node_id> transistors[] = {
+static const transdef transistors[] = {
 	{358, 559, 218},
 	{1609, 658, 350},
 	{413, 559, 1147},

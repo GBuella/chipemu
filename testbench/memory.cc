@@ -4,6 +4,9 @@
 namespace testbench
 {
 
+address_range::~address_range()
+{}
+
 namespace
 {
 

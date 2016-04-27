@@ -44,6 +44,11 @@ public:
     {
         data[address - REGISTERS_START] = value;
     }
+
+    kernel_registers_class()
+    {
+        memset(data.data(), 0, data.size());
+    }
 };
 
 unsigned char* register_addr(const std::shared_ptr<address_range>& registers,

@@ -16,6 +16,7 @@ public:
     virtual bool contains(unsigned address) const = 0;
     virtual unsigned char read(unsigned address) const = 0;
     virtual void write(unsigned address, unsigned char value) = 0;
+    virtual ~address_range();
 };
 
 class memory 

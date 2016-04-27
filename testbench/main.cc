@@ -78,7 +78,7 @@ static void pick_machine(std::string name)
             machine.reset(testbench::machine::create(name.c_str()));
         }
         catch (const std::exception& exception) {
-            fputs(exception.what(), stderr);
+            fprintf(stderr, "Error: %s\n", exception.what());
         }
         if (not machine) {
             fputs("Error initializing machine\n", stderr);

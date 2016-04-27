@@ -7,18 +7,6 @@ set(CHIPEMU_VERSION_MINOR 1)
 option(CHIPEMU_USE_WEVERYTHING
     "Use the -Weverything compiler flag" OFF)
 
-option(CHIPEMU_USE_PEXT_BITBOARD
-    "Use pext bitboard instead of old-style magic bitboards" OFF)
-
-option(CHIPEMU_USE_ALIGNAS_64
-    "Use 64 byte alignment for the position representation" OFF)
-
-option(CHIPEMU_USE_BOARD_VECTOR_64
-    "Use 64 byte vectors to represent the board" OFF)
-
-option(CHIPEMU_USE_PIECE_MAP_VECTOR
-    "Use vector operations with bitboard piece maps" OFF)
-
 if(NOT MSVC)
   option(CHIPEMU_NO_ARCHNATIVE "Do not attempt to use the -march=native flag")
 else()
@@ -59,6 +47,8 @@ set(CHIPEMU_STANDARD_FLAG "")
 
 if(NOT MSVC)
 
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native ")
+
 # Even after setting CXX_STANDARD to 14, cmake still doesn't
 # compile the feature tests with the c++14 flag
 #
@@ -90,34 +80,6 @@ if(MSVC)
   target_compile_options(chipemu PUBLIC "$<$<CONFIG:Release>:/Za /MD>")
 
 endif()
-
-CHECK_CXX_SOURCE_RUNS("
-int addit(int* restrict a, const int* restrict b) {
-  a[0] = b[1];
-  return a[0] + b[1];
-}
-int main() {
-  int a[2];
-  int b[2];
-  a[0] = 1;a[1] = 2;
-  b[0] = 1;b[1] = 2;
-  return addit(a, b) & 0;
-}"
-  CHIPEMU_HAS_RESTRICT_KEYWORD)
-
-CHECK_CXX_SOURCE_RUNS("
-int addit(int* __restrict__ a, const int* __restrict__ b) {
-  a[0] = b[1];
-  return a[0] + b[1];
-}
-int main() {
-  int a[2];
-  int b[2];
-  a[0] = 1;a[1] = 2;
-  b[0] = 1;b[1] = 2;
-  return addit(a, b) & 0;
-}"
-  CHIPEMU_HAS__RESTRICT__KEYWORD)
 
 if(CHIPEMU_COMPILER_SUPPORTS_WERROR)
   target_compile_options(chipemu PRIVATE -Werror)
@@ -154,33 +116,6 @@ if(CHIPEMU_USE_WEVERYTHING)
       -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-padded)
   endif()
 endif()
-
-# This is needed to instruct GCC not to clobber the SIMD
-# registers used as permanent storage
-#
-if(CHIPEMU_HAS_GCC_GLOBAL_REGISTER_VARIABLE_XMM
-   AND CHIPEMU_HAS_X64_128BIT_BUILTINS)
-  if(CHIPEMU_HAS_GCC_GLOBAL_REGISTER_VARIABLE_YMM
-     AND CHIPEMU_HAS_X64_256BIT_BUILTINS)
-    if(CHIPEMU_HAS_GCC_GLOBAL_REGISTER_VARIABLE_ZMM
-       AND CHIPEMU_HAS_X64_512BIT_BUILTINS)
-      target_compile_options(chipemu PUBLIC -ffixed-xmm29)
-      target_compile_options(chipemu PUBLIC -ffixed-xmm30)
-      target_compile_options(chipemu PUBLIC -ffixed-xmm31)
-    else()
-    target_compile_options(chipemu PUBLIC -ffixed-xmm13)
-    target_compile_options(chipemu PUBLIC -ffixed-xmm14)
-    target_compile_options(chipemu PUBLIC -ffixed-xmm15)
-    endif()
-  else()
-  target_compile_options(chipemu PUBLIC -ffixed-xmm5)
-  target_compile_options(chipemu PUBLIC -ffixed-xmm6)
-  target_compile_options(chipemu PUBLIC -ffixed-xmm7)
-  endif()
-endif()
-
-
-configure_file(cmake_config.h.in config.h)
 
 include_directories(include)
 

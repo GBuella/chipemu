@@ -12,7 +12,6 @@ machine_6502::machine_6502():
     CPU_6502(MOS6502::create())
 {}
 
-static void initialize(MOS6502*);
 static void cycle(MOS6502*);
 static void handle_memory(MOS6502*, memory*);
 
