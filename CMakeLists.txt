@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 2.8.0)
 project(chipemu CXX)
 set(CHIPEMU_VERSION_MAJOR 0)
 set(CHIPEMU_VERSION_MINOR 1)
@@ -60,10 +60,7 @@ if(NOT MSVC)
     set(CHIPEMU_STANDARD_FLAG "-std=c++1y")
   endif()
 
-  target_compile_options(chipemu PRIVATE "${CHIPEMU_STANDARD_FLAG}")
-  target_compile_options(testbench PRIVATE "${CHIPEMU_STANDARD_FLAG}")
-  target_compile_options(testbench PRIVATE "${CHIPEMU_STANDARD_FLAG}")
-
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CHIPEMU_STANDARD_FLAG}")
 
 endif()
 
